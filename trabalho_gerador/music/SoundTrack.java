@@ -49,6 +49,7 @@ public class SoundTrack {
     public void setTrack(Track track) {
         this.track = track;
     }
+    public void setInstrument(int instrument) {this.instrument = instrument;}
     public void setOctave(int octave) {
         this.octave = octave;
     }
@@ -101,7 +102,7 @@ public class SoundTrack {
         ACTION_MAP.put('u', repeatAction);
 
         ACTION_MAP.put('?', SoundTrack::randomNote);
-        ACTION_MAP.put('\n', SoundTrack::newInstrument); //Necessária implementação
+        ACTION_MAP.put('\n', SoundTrack::newInstrument);
 
         ACTION_MAP.put(';', SoundTrack::pause);
     }
@@ -197,11 +198,8 @@ public class SoundTrack {
         }
     }
 
-    //Implementar aqui
     private static void newInstrument(SoundTrack sound, char character, char previousCharacter, int previousNote) {
-        int digit = Character.getNumericValue(character);
-        int newInstrument = sound.getInstrument() + digit;
-        sound.changeInstrument(newInstrument);
+        sound.changeInstrument(sound.getInstrument());
     }
 
     private static void increaseOctave(SoundTrack sound, char character, char previousCharacter, int previousNote) {

@@ -3,30 +3,18 @@ import java.io.*;
 import music.*;
 
 public class Gerador {
-    public static int beginning(SoundTrack track) throws Exception {
-        int counterTick = SoundTrack.TIME_BEGIN;
-        int beat = 2;
-
-        track.setChannel(9);  // Channel 9 = drums;
-        track.setOctave(2);
-        track.setVolume(100);
-        track.setTick(counterTick);
-
-        for (int i = 0; i < 4; i++) {
-            track.addNote(new Note(1, beat));
-
-            counterTick = track.getCurrentTick();
-
-            track.setTick(counterTick + beat);
-        }
-
-        return track.getCurrentTick();
-    }
 	public static void main(String[] args) throws Exception {
 
         MusicPlayer player = new MusicPlayer();
 
-        /*
+        geraSom(player);
+
+
+        InterfaceGrafica screen = new InterfaceGrafica();
+        screen.setPlayer(player);
+    }
+
+    private static void geraSom(MusicPlayer player) throws Exception {
         SoundTrack st = player.createTrack();
         SoundTrack st_lows = player.createTrack();
 
@@ -35,31 +23,31 @@ public class Gerador {
 
 
         int[] melody = {
-            59,59,60,62, 62,60,59,57, 55,55,57,59, 59,57,57,
-            59,59,60,62, 62,60,59,57, 55,55,57,59, 57,55,55,
-            57,57,59,55, 57,59,60,59,55, 57,59,60,59,57, 55,57,50,
-            59,59,60,62, 62,60,59,57, 55,55,57,59, 57,55,55
+                59, 59, 60, 62, 62, 60, 59, 57, 55, 55, 57, 59, 59, 57, 57,
+                59, 59, 60, 62, 62, 60, 59, 57, 55, 55, 57, 59, 57, 55, 55,
+                57, 57, 59, 55, 57, 59, 60, 59, 55, 57, 59, 60, 59, 57, 55, 57, 50,
+                59, 59, 60, 62, 62, 60, 59, 57, 55, 55, 57, 59, 57, 55, 55
         };
 
         int[] durations = {
-            4,4,4,4, 4,4,4,4, 4,4,4,4, 6,2,8,
-            4,4,4,4, 4,4,4,4, 4,4,4,4, 6,2,8,
-            4,4,4,4, 4,2,2,4,4, 4,2,2,4,4, 4,4,8,
-            4,4,4,4, 4,4,4,4, 4,4,4,4, 6,2,12
+                4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 6, 2, 8,
+                4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 6, 2, 8,
+                4, 4, 4, 4, 4, 2, 2, 4, 4, 4, 2, 2, 4, 4, 4, 4, 8,
+                4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 6, 2, 12
         };
 
         int[] lows = {
-            43,0,0,0, 42,0,0,0, 43,0,0,0, 43,0,42,
-            43,0,0,0, 42,0,0,0, 43,0,0,0, 42,0,43,
-            42,0,43,0, 42,0,0,43,0, 42,0,0,43,0, 43,0,42,
-            43,0,0,0, 42,0,0,0, 43,0,0,0, 42,0,43,
+                43, 0, 0, 0, 42, 0, 0, 0, 43, 0, 0, 0, 43, 0, 42,
+                43, 0, 0, 0, 42, 0, 0, 0, 43, 0, 0, 0, 42, 0, 43,
+                42, 0, 43, 0, 42, 0, 0, 43, 0, 42, 0, 0, 43, 0, 43, 0, 42,
+                43, 0, 0, 0, 42, 0, 0, 0, 43, 0, 0, 0, 42, 0, 43,
         };
 
         int[] duration_l = {
-            16,0,0,0, 16,0,0,0, 16,0,0,0, 8,0,8,
-            16,0,0,0, 16,0,0,0, 16,0,0,0, 8,0,8,
-            8,0,8,0, 8,0,0,8,0, 8,0,0,8,0, 8,0,8,
-            16,0,0,0, 16,0,0,0, 16,0,0,0, 8,0,12,
+                16, 0, 0, 0, 16, 0, 0, 0, 16, 0, 0, 0, 8, 0, 8,
+                16, 0, 0, 0, 16, 0, 0, 0, 16, 0, 0, 0, 8, 0, 8,
+                8, 0, 8, 0, 8, 0, 0, 8, 0, 8, 0, 0, 8, 0, 8, 0, 8,
+                16, 0, 0, 0, 16, 0, 0, 0, 16, 0, 0, 0, 8, 0, 12,
         };
 
         int tamanho = melody.length;
@@ -101,9 +89,26 @@ public class Gerador {
 
             st_lows.setOctave(octave);
             st_lows.addNote(note);
-        }*/
-
-        InterfaceGrafica screen = new InterfaceGrafica();
-        screen.setPlayer(player);
+        }
     }
+
+        public static int beginning(SoundTrack track) throws Exception {
+            int counterTick = SoundTrack.TIME_BEGIN;
+            int beat = 2;
+
+            track.setChannel(9);  // Channel 9 = drums;
+            track.setOctave(2);
+            track.setVolume(100);
+            track.setTick(counterTick);
+
+            for (int i = 0; i < 4; i++) {
+                track.addNote(new Note(1, beat));
+
+                counterTick = track.getCurrentTick();
+
+                track.setTick(counterTick + beat);
+            }
+
+            return track.getCurrentTick();
+        }
 }
