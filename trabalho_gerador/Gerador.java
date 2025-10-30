@@ -15,8 +15,8 @@ public class Gerador {
     }
 
     private static void geraSom(MusicPlayer player) throws Exception {
-        SoundTrack st = player.createTrack();
-        SoundTrack st_lows = player.createTrack();
+        SoundTrack st = player.createTrack(0);
+        SoundTrack st_lows = player.createTrack(0);
 
 
         int tick = beginning(st);

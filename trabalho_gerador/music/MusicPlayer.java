@@ -8,7 +8,6 @@ import java.io.IOException;
 public class MusicPlayer {
     private Sequencer controller;
     private Sequence sequence;
-    private SoundTrack soundTrack;
 
     public MusicPlayer() throws Exception {
         controller = MidiSystem.getSequencer();
@@ -19,16 +18,12 @@ public class MusicPlayer {
     public Sequence getSequence() {
         return this.sequence;
     }
+    public Sequencer getController() {return this.controller;}
 
-    public SoundTrack createTrack() {
+    public SoundTrack createTrack(int currentInstrument, int volumeAtual) {
         Track track = this.sequence.createTrack();
-        soundTrack = new SoundTrack(track);
-        return soundTrack;
-    }
+        return new SoundTrack(track,currentInstrument,volumeAtual);
 
-    public void setInstrument(int instrument)
-    {
-        soundTrack.setInstrument(instrument);
     }
 
     public boolean deleteTrack(Track track) {

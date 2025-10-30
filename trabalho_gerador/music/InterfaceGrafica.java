@@ -4,6 +4,11 @@ import javax.sound.midi.*;
 import javax.swing.*;
 import java.awt.*;
 import java.io.*;
+import javax.swing.JSlider;
+import javax.swing.JLabel;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.border.EmptyBorder;
 
 public class InterfaceGrafica extends JFrame {
 
@@ -13,6 +18,7 @@ public class InterfaceGrafica extends JFrame {
     private JTextArea areaTexto;
     private File arquivoDigitado;
     private int instrumentoAtual = 0; // 0 = piano, 24 = guitarra, 25 = violão
+    private int volumeAtual;
 
     public InterfaceGrafica() {
         super("Mauri music");
@@ -41,6 +47,7 @@ public class InterfaceGrafica extends JFrame {
 
         add(painelBotoes, BorderLayout.NORTH);
 
+        //Botão escolher arquivo
         EscolherFile.addActionListener(e -> {
             JFileChooser escolher = new JFileChooser();
             int result = escolher.showOpenDialog(this);
@@ -51,8 +58,10 @@ public class InterfaceGrafica extends JFrame {
             }
         });
 
+        //Botão abrir escrita textual
         NovoTexto.addActionListener(e -> abrirJanelaTexto());
 
+        //Botão ler arquivo de texto
         LerDoTeclado.addActionListener(e -> {
             if (arquivoDigitado != null && arquivoDigitado.exists()) {
                 prepararLeitura(arquivoDigitado);
@@ -61,6 +70,7 @@ public class InterfaceGrafica extends JFrame {
             }
         });
 
+        //Botão de start/pause
         PlayandPause.addActionListener(e -> {
             if (tocar != null) {
                 if (isPlaying) {
@@ -73,6 +83,7 @@ public class InterfaceGrafica extends JFrame {
             }
         });
 
+        //Botão de restart
         restart.addActionListener(e -> {
             if (tocar != null) {
                 tocar.restart();
@@ -80,6 +91,7 @@ public class InterfaceGrafica extends JFrame {
             }
         });
 
+        //Botão exolha de instrumento
         EscolherInstrumento.addActionListener(e -> {
             String[] opcoes = {"Piano", "Violão", "Guitarra"};
             String escolha = (String) JOptionPane.showInputDialog(
@@ -98,12 +110,41 @@ public class InterfaceGrafica extends JFrame {
                     case "Violão" -> instrumentoAtual = 24;
                     case "Guitarra" -> instrumentoAtual = 26;
                 }
-                if (tocar != null) {
-                    tocar.setInstrument(instrumentoAtual); // supondo que exista esse método
-                }
-                JOptionPane.showMessageDialog(this, "Instrumento selecionado: " + escolha);
             }
         });
+
+        //Botão de volume
+        JPanel painelVolume = new JPanel();
+        painelVolume.setBackground(Color.BLACK);
+        painelVolume.setLayout(new BorderLayout(10, 0)); // Layout com gap de 10px
+        // Adiciona um preenchimento (padding)
+        painelVolume.setBorder(new EmptyBorder(10, 20, 10, 20));
+
+        JLabel labelVolume = new JLabel("Volume:");
+        labelVolume.setForeground(Color.WHITE);
+        labelVolume.setFont(new Font("Arial", Font.BOLD, 14));
+        painelVolume.add(labelVolume, BorderLayout.WEST);
+        JSlider volumeSlider = new JSlider(JSlider.HORIZONTAL, 0, 100, 50);
+        volumeSlider.setBackground(Color.BLACK);
+        volumeSlider.setForeground(Color.WHITE);
+
+        volumeSlider.setMajorTickSpacing(25);
+        volumeSlider.setMinorTickSpacing(5);
+        volumeSlider.setPaintTicks(true);
+        volumeSlider.setPaintLabels(true);
+
+        volumeSlider.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                if (!volumeSlider.getValueIsAdjusting()) {
+                    int volume = volumeSlider.getValue();
+                }
+            }
+        });
+
+        painelVolume.add(volumeSlider, BorderLayout.CENTER);
+        add(painelVolume, BorderLayout.SOUTH);
+
+        // NOVO CÓDIGO TERMINA AQUI
 
         setSize(900, 600);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -148,8 +189,8 @@ public class InterfaceGrafica extends JFrame {
             Track[] tracks = tocar.getSequence().getTracks();
             for (Track track : tracks) tocar.deleteTrack(track);
 
-            SoundTrack soundTrack = tocar.createTrack();
-            tocar.setInstrument(instrumentoAtual);
+            SoundTrack soundTrack = tocar.createTrack(instrumentoAtual, volumeAtual);
+            soundTrack.setController(tocar.getController());
             MusicPlayer.readCharacterByCharacter(arquivo, soundTrack);
 
         } catch (Exception ex) {
