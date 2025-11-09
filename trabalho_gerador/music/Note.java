@@ -48,4 +48,9 @@ public class Note {
             default: return -1;
         }
     }
+
+    public static boolean isNote(char character) {
+        return ('A' <= character && character<= 'H') ||
+                ('a' <= character && character<= 'h');
+    }
 }

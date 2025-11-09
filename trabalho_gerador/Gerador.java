@@ -1,6 +1,7 @@
 import javax.sound.midi.*;
 import java.io.*;
 import music.*;
+import music.Instrument;
 
 public class Gerador {
 	public static void main(String[] args) throws Exception {
@@ -9,14 +10,12 @@ public class Gerador {
 
         geraSom(player);
 
-
         InterfaceGrafica screen = new InterfaceGrafica();
         screen.setPlayer(player);
     }
-
     private static void geraSom(MusicPlayer player) throws Exception {
-        SoundTrack st = player.createTrack(0);
-        SoundTrack st_lows = player.createTrack(0);
+        SoundTrack st = player.createTrack(Instrument.PIANO, 0);
+        SoundTrack st_lows = player.createTrack(Instrument.PIANO,0);
 
 
         int tick = beginning(st);
@@ -54,12 +53,12 @@ public class Gerador {
 
 
         st.setChannel(0);
-        st.changeInstrument(0);
+        st.changeInstrument(Instrument.PIANO);
         st.setVolume(100);
         st.setTick(tick);
 
         st_lows.setChannel(1);
-        st_lows.changeInstrument(42);
+        st_lows.changeInstrument(Instrument.FLAUTA);
         st_lows.setVolume(75);
         st_lows.setTick(tick);
 

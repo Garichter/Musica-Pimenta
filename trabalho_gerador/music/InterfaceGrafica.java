@@ -4,6 +4,7 @@ import javax.sound.midi.*;
 import javax.swing.*;
 import java.awt.*;
 import java.io.*;
+import java.util.Arrays;
 import javax.swing.JSlider;
 import javax.swing.JLabel;
 import javax.swing.event.ChangeEvent;
@@ -17,7 +18,7 @@ public class InterfaceGrafica extends JFrame {
     private File file;
     private JTextArea areaTexto;
     private File arquivoDigitado;
-    private int instrumentoAtual = 0; // 0 = piano, 24 = guitarra, 25 = violão
+    private Instrument instrumentoAtual = Instrument.PIANO;
     private int volumeAtual;
 
     public InterfaceGrafica() {
@@ -91,9 +92,14 @@ public class InterfaceGrafica extends JFrame {
             }
         });
 
-        //Botão exolha de instrumento
+        //Botão escolha de instrumento
         EscolherInstrumento.addActionListener(e -> {
-            String[] opcoes = {"Piano", "Violão", "Guitarra"};
+            String[] opcoes = Arrays.stream(Instrument.values())
+                    .map(Instrument::name)
+                    .map(String::toLowerCase)
+                    .map(s -> s.substring(0,1).toUpperCase() + s.substring(1))
+                    .toArray(String[]::new);
+
             String escolha = (String) JOptionPane.showInputDialog(
                     this,
                     "Escolha o instrumento:",
@@ -105,10 +111,10 @@ public class InterfaceGrafica extends JFrame {
             );
 
             if (escolha != null) {
-                switch (escolha) {
-                    case "Piano" -> instrumentoAtual = 0;
-                    case "Violão" -> instrumentoAtual = 24;
-                    case "Guitarra" -> instrumentoAtual = 26;
+                try {
+                    instrumentoAtual = Instrument.valueOf(escolha.toUpperCase());
+                } catch (IllegalArgumentException ex) {
+                    System.out.println("Instrumento inválido: " + escolha);
                 }
             }
         });
@@ -184,14 +190,16 @@ public class InterfaceGrafica extends JFrame {
                 tocar.pause();
                 isPlaying = false;
             }
-            tocar = new MusicPlayer();
 
+            tocar = new MusicPlayer();
             Track[] tracks = tocar.getSequence().getTracks();
             for (Track track : tracks) tocar.deleteTrack(track);
 
             SoundTrack soundTrack = tocar.createTrack(instrumentoAtual, volumeAtual);
             soundTrack.setController(tocar.getController());
-            MusicPlayer.readCharacterByCharacter(arquivo, soundTrack);
+
+            FileTreatment preparaSom = new FileTreatment(arquivo,soundTrack);
+            preparaSom.readCharacterByCharacter();
 
         } catch (Exception ex) {
             ex.printStackTrace();
